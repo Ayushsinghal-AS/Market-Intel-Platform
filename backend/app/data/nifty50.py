@@ -1,0 +1,62 @@
+"""
+Static Nifty 50 constituent -> sector map for the heatmap/breadth/RS engines.
+NSE reshuffles this index twice a year (Mar/Sep) -- refresh this list from the
+official NSE indices CSV periodically; it is intentionally not fetched live
+since there is no free, stable API for index constituents.
+"""
+
+NIFTY50 = {
+    "RELIANCE.NS": "Energy",
+    "TCS.NS": "IT",
+    "HDFCBANK.NS": "Financial Services",
+    "ICICIBANK.NS": "Financial Services",
+    "INFY.NS": "IT",
+    "HINDUNILVR.NS": "FMCG",
+    "ITC.NS": "FMCG",
+    "SBIN.NS": "Financial Services",
+    "BHARTIARTL.NS": "Telecom",
+    "KOTAKBANK.NS": "Financial Services",
+    "LT.NS": "Infra/Capital Goods",
+    "AXISBANK.NS": "Financial Services",
+    "BAJFINANCE.NS": "Financial Services",
+    "ASIANPAINT.NS": "Consumer Durables",
+    "MARUTI.NS": "Auto",
+    "HCLTECH.NS": "IT",
+    "SUNPHARMA.NS": "Pharma",
+    "TITAN.NS": "Consumer Durables",
+    "ULTRACEMCO.NS": "Cement",
+    "WIPRO.NS": "IT",
+    "NESTLEIND.NS": "FMCG",
+    "ONGC.NS": "Energy",
+    "NTPC.NS": "Power",
+    "POWERGRID.NS": "Power",
+    "M&M.NS": "Auto",
+    "TATAMOTORS.NS": "Auto",
+    "TATASTEEL.NS": "Metals",
+    "ADANIENT.NS": "Diversified",
+    "ADANIPORTS.NS": "Infra/Capital Goods",
+    "JSWSTEEL.NS": "Metals",
+    "BAJAJFINSV.NS": "Financial Services",
+    "TECHM.NS": "IT",
+    "INDUSINDBK.NS": "Financial Services",
+    "GRASIM.NS": "Cement",
+    "HDFCLIFE.NS": "Financial Services",
+    "SBILIFE.NS": "Financial Services",
+    "DRREDDY.NS": "Pharma",
+    "CIPLA.NS": "Pharma",
+    "EICHERMOT.NS": "Auto",
+    "BRITANNIA.NS": "FMCG",
+    "DIVISLAB.NS": "Pharma",
+    "COALINDIA.NS": "Energy",
+    "HEROMOTOCO.NS": "Auto",
+    "BPCL.NS": "Energy",
+    "UPL.NS": "Chemicals",
+    "SHREECEM.NS": "Cement",
+    "HINDALCO.NS": "Metals",
+    "APOLLOHOSP.NS": "Healthcare",
+    "BAJAJ-AUTO.NS": "Auto",
+    "TATACONSUM.NS": "FMCG",
+    "LTIM.NS": "IT",
+}
+
+SECTORS = sorted(set(NIFTY50.values()))

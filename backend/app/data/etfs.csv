@@ -1,0 +1,26 @@
+Ticker,Category
+NIFTYBEES.NS,Broad Market
+BANKBEES.NS,Banking
+JUNIORBEES.NS,Broad Market (Next 50)
+MID150BEES.NS,Midcap
+HDFCSML250.NS,Smallcap
+GOLDBEES.NS,Precious Metals
+SILVERBEES.NS,Precious Metals
+ITBEES.NS,Sector - Tech
+PHARMABEES.NS,Sector - Pharma
+AUTOBEES.NS,Sector - Auto
+CONSUMBEES.NS,Sector - Consumption
+PSUBNKBEES.NS,Sector - PSU Bank
+INFRABEES.NS,Sector - Infra
+CPSEETF.NS,Thematic - PSU
+MAFANG.NS,International
+MON100.NS,International
+HNGSNGBEES.NS,International
+MOMENTUM.NS,Factor - Momentum
+NV20BEES.NS,Factor - Value
+LOWVOLIETF.NS,Factor - Low Volatility
+ALPHAETF.NS,Factor - Alpha
+DIVOPPBEES.NS,Factor - Dividend
+SENSEXETF.NS,Broad Market
+MAHKTECH.NS,Sector - Tech
+MAKEINDIA.NS,Thematic - Mfg
