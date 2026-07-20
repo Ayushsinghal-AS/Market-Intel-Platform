@@ -6,7 +6,8 @@ import StockExplorer from "./pages/StockExplorer";
 import EtfScanner from "./pages/EtfScanner";
 import NiftyScanner from "./pages/NiftyScanner";
 import Login from "./pages/Login";
-import { getToken, getUsername, clearSession } from "./auth";
+import { api } from "./api";
+import { getToken, getUsername, clearSession, setSession } from "./auth";
 
 const TABS = [
   { key: "dashboard", label: "Market Dashboard", Component: Dashboard },
@@ -19,6 +20,7 @@ const TABS = [
 
 export default function App() {
   const [authed, setAuthed] = useState(!!getToken());
+  const [autoLoginFailed, setAutoLoginFailed] = useState(false);
   const [active, setActive] = useState("dashboard");
 
   useEffect(() => {
@@ -27,8 +29,29 @@ export default function App() {
     return () => window.removeEventListener("auth:unauthorized", onUnauthorized);
   }, []);
 
+  // Demo mode: skip the login screen entirely by signing in as the guest
+  // account automatically. Falls back to the real login form if the backend
+  // is unreachable or guest login is disabled.
+  useEffect(() => {
+    if (authed) return;
+    api
+      .guestLogin()
+      .then((res) => {
+        setSession(res.access_token, res.username);
+        setAuthed(true);
+      })
+      .catch(() => setAutoLoginFailed(true));
+  }, [authed]);
+
   if (!authed) {
-    return <Login onAuthenticated={() => setAuthed(true)} />;
+    if (autoLoginFailed) {
+      return <Login onAuthenticated={() => setAuthed(true)} />;
+    }
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-page-light dark:bg-page-dark text-ink-muted text-sm">
+        Loading…
+      </div>
+    );
   }
 
   const logout = () => {
