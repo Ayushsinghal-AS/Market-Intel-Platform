@@ -24,6 +24,20 @@ export default function Login({ onAuthenticated }) {
     }
   };
 
+  const continueAsGuest = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await api.guestLogin();
+      setSession(res.access_token, res.username);
+      onAuthenticated();
+    } catch (err) {
+      setError("Guest login is unavailable right now.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-page-light dark:bg-page-dark px-4">
       <div className="w-full max-w-sm">
@@ -66,6 +80,19 @@ export default function Login({ onAuthenticated }) {
             className="w-full text-xs text-ink-muted hover:underline"
           >
             {mode === "login" ? "Need an account? Register" : "Already have an account? Log in"}
+          </button>
+          <div className="flex items-center gap-2 text-[10px] text-ink-muted uppercase tracking-wide">
+            <div className="flex-1 h-px bg-black/10 dark:bg-white/10" />
+            or
+            <div className="flex-1 h-px bg-black/10 dark:bg-white/10" />
+          </div>
+          <button
+            type="button"
+            onClick={continueAsGuest}
+            disabled={loading}
+            className="w-full text-sm px-3 py-2 rounded border border-black/10 dark:border-white/10 text-ink-secondary-light dark:text-ink-secondary-dark hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-50"
+          >
+            Continue as Guest
           </button>
         </form>
       </div>

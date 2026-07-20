@@ -48,6 +48,7 @@ export const api = {
     request("/auth/register", { method: "POST", body: JSON.stringify({ username, password }) }, false),
   login: (username, password) =>
     request("/auth/login", { method: "POST", body: JSON.stringify({ username, password }) }, false),
+  guestLogin: () => request("/auth/guest", { method: "POST" }, false),
 
   heatmap: () => request("/market/heatmap"),
   breadth: () => request("/market/breadth"),
