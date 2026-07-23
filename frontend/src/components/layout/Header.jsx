@@ -1,6 +1,7 @@
 import { useState } from "react";
 import GlobalSearch from "../search/GlobalSearch";
 import IndexTickerMarquee from "./IndexTickerMarquee";
+import LiveMarketBadge from "./LiveMarketBadge";
 import ThemeToggle from "./ThemeToggle";
 import Icon from "../icons/Icon";
 
@@ -19,6 +20,8 @@ export default function Header({ onToggleMobileSidebar, username, onLogout }) {
         </button>
 
         <GlobalSearch className="max-w-xs" />
+
+        <LiveMarketBadge />
 
         <IndexTickerMarquee />
 

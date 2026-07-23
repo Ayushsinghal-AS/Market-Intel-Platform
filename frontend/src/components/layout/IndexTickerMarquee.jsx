@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { api } from "../../api";
+import { useMarketHours } from "../../contexts/MarketHoursContext";
+import { useLivePrice } from "../../hooks/useLivePrice";
+import { useTickFlash } from "../../hooks/useTickFlash";
+
+const NIFTY_INDEX_TICKER = "^NSEI";
 
 // The existing /market/nifty-multi-timeframe payload has no true 1-day change
 // field, so this honestly surfaces price + 1W/1M returns rather than
@@ -11,6 +16,9 @@ function fmt(n) {
 
 export default function IndexTickerMarquee() {
   const [stats, setStats] = useState(null);
+  const { isMarketOpen } = useMarketHours();
+  const livePrice = useLivePrice(NIFTY_INDEX_TICKER, isMarketOpen, stats?.price);
+  const flash = useTickFlash(livePrice);
 
   useEffect(() => {
     let cancelled = false;
@@ -35,7 +43,14 @@ export default function IndexTickerMarquee() {
   const chips = (
     <div className="flex items-center gap-6 shrink-0 px-3">
       <span className="text-xs font-semibold whitespace-nowrap">
-        NIFTY 50 <span className="tabular-nums font-normal ml-1">{fmt(stats.price)}</span>
+        NIFTY 50{" "}
+        <span
+          className={`tabular-nums font-normal ml-1 transition-colors duration-300 ${
+            flash === "up" ? "text-status-good" : flash === "down" ? "text-status-critical" : ""
+          }`}
+        >
+          {fmt(livePrice ?? stats.price)}
+        </span>
       </span>
       <span className={`text-xs tabular-nums whitespace-nowrap ${stats.return_1w_pct >= 0 ? "text-status-good" : "text-status-critical"}`}>
         1W {stats.return_1w_pct >= 0 ? "+" : ""}

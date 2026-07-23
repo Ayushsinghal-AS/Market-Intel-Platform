@@ -11,7 +11,7 @@ import pandas as pd
 import yfinance as yf
 
 from app.cache import cached
-from app.config import CACHE_TTL_DAILY, CACHE_TTL_INTRADAY
+from app.config import CACHE_TTL_DAILY, CACHE_TTL_INTRADAY, CACHE_TTL_LIVE
 
 
 def _flatten(df: pd.DataFrame, ticker: str) -> pd.DataFrame:
@@ -104,6 +104,21 @@ def get_bulk_history(tickers: tuple, period: str = "1y") -> dict:
             continue
         out[t] = {"close": c, "volume": v}
     return out
+
+
+@cached(ttl=CACHE_TTL_LIVE)
+def get_live_quote(ticker: str) -> dict:
+    """Cheapest possible single-ticker price check -- a 1-day/1-minute bar
+    download, no `yf.Ticker().info` call -- since this is meant to be hit far
+    more often (every ~CACHE_TTL_LIVE seconds) than get_overview's full
+    fundamentals fetch."""
+    df = _download_with_retry(ticker, period="1d", interval="1m")
+    if df.empty:
+        return {"error": f"No live data for {ticker}"}
+    df = _flatten(df, ticker).dropna(subset=["Close"])
+    if df.empty:
+        return {"error": f"No live data for {ticker}"}
+    return {"ticker": ticker, "price": round(float(df["Close"].iloc[-1]), 2)}
 
 
 def ticker_exists(ticker: str) -> bool:

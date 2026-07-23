@@ -5,9 +5,16 @@ import { api } from "../api";
 import StatCard from "../components/StatCard";
 import EquityCurveChart from "../components/EquityCurveChart";
 import AnimatedNumber from "../components/ui/AnimatedNumber";
+import TiltCard from "../components/ui/TiltCard";
 import { SkeletonStatGrid, SkeletonChartBlock, SkeletonTableRows } from "../components/ui/Skeleton";
 import PeerComparisonTable from "../components/PeerComparisonTable";
 import SentimentBadge from "../components/SentimentBadge";
+import ForecastChart from "../components/ForecastChart";
+import ForecastControls from "../components/ForecastControls";
+import SignalDial from "../components/SignalDial";
+import { useMarketHours } from "../contexts/MarketHoursContext";
+import { useLivePrice } from "../hooks/useLivePrice";
+import { useTickFlash } from "../hooks/useTickFlash";
 
 function fmt(n, opts) {
   if (n === null || n === undefined) return "—";
@@ -21,6 +28,12 @@ export default function StockDetail() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState(null);
+  const { isMarketOpen } = useMarketHours();
+  const livePrice = useLivePrice(ticker, isMarketOpen, data?.price);
+  const priceFlash = useTickFlash(livePrice);
+  const [horizonDays, setHorizonDays] = useState(7);
+  const [volatilityMultiplier, setVolatilityMultiplier] = useState(1);
+  const [extraGrowthPct, setExtraGrowthPct] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -36,7 +49,8 @@ export default function StockDetail() {
     api.stockNews(ticker).then(setNews).catch(() => {});
   }, [ticker]);
 
-  const changePct = data?.previous_close ? ((data.price - data.previous_close) / data.previous_close) * 100 : null;
+  const displayPrice = livePrice ?? data?.price;
+  const changePct = data?.previous_close && displayPrice != null ? ((displayPrice - data.previous_close) / data.previous_close) * 100 : null;
 
   return (
     <div className="p-6 space-y-8 max-w-6xl mx-auto">
@@ -55,25 +69,32 @@ export default function StockDetail() {
       {data && !loading && (
         <>
           <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
-            <div className="flex items-baseline justify-between mb-3 flex-wrap gap-2">
-              <div>
-                <h2 className="text-lg font-bold">{data.name}</h2>
-                <p className="text-xs text-ink-muted">
-                  {data.ticker} · {data.sector || "—"} {data.industry ? `· ${data.industry}` : ""}
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-semibold">
-                  ₹<AnimatedNumber value={data.price} decimals={2} />
+            <TiltCard className="glass-card p-4 mb-3">
+              <div className="flex items-baseline justify-between flex-wrap gap-2">
+                <div>
+                  <h2 className="text-lg font-bold">{data.name}</h2>
+                  <p className="text-xs text-ink-muted">
+                    {data.ticker} · {data.sector || "—"} {data.industry ? `· ${data.industry}` : ""}
+                  </p>
                 </div>
-                {changePct != null && (
-                  <div className={`text-xs tabular-nums ${changePct >= 0 ? "text-status-good" : "text-status-critical"}`}>
-                    {changePct >= 0 ? "+" : ""}
-                    {changePct.toFixed(2)}% · Prev close ₹{fmt(data.previous_close)}
+                <div className="text-right">
+                  <div
+                    className={`text-2xl font-semibold transition-colors duration-300 ${
+                      priceFlash === "up" ? "text-status-good" : priceFlash === "down" ? "text-status-critical" : ""
+                    }`}
+                    title={isMarketOpen ? "Live price: real sync every ~12s, simulated micro-movement between syncs" : "Market closed — showing last known price"}
+                  >
+                    ₹<AnimatedNumber value={displayPrice} decimals={2} />
                   </div>
-                )}
+                  {changePct != null && (
+                    <div className={`text-xs tabular-nums ${changePct >= 0 ? "text-status-good" : "text-status-critical"}`}>
+                      {changePct >= 0 ? "+" : ""}
+                      {changePct.toFixed(2)}% · Prev close ₹{fmt(data.previous_close)}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            </TiltCard>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <StatCard label="Day Range" value={`${fmt(data.day_low)} – ${fmt(data.day_high)}`} />
               <StatCard label="52W Range" value={`${fmt(data.fifty_two_week_low)} – ${fmt(data.fifty_two_week_high)}`} />
@@ -122,6 +143,35 @@ export default function StockDetail() {
               )}
             </div>
             <div className="mt-2 text-xs text-ink-muted">Signals: {data.technical.signals.join(" · ")}</div>
+          </motion.section>
+
+          <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.12 }}>
+            <h2 className="text-sm font-semibold text-ink-muted mb-3 uppercase tracking-wide">AI Price Forecast</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2 glass-card p-4">
+                <ForecastChart
+                  chart={data.chart}
+                  lastLivePrice={displayPrice}
+                  horizonDays={horizonDays}
+                  volatilityMultiplier={volatilityMultiplier}
+                  extraGrowthPct={extraGrowthPct}
+                />
+              </div>
+              <div className="space-y-4">
+                <ForecastControls
+                  horizonDays={horizonDays}
+                  onHorizonChange={setHorizonDays}
+                  volatilityMultiplier={volatilityMultiplier}
+                  onVolatilityChange={setVolatilityMultiplier}
+                  extraGrowthPct={extraGrowthPct}
+                  onGrowthChange={setExtraGrowthPct}
+                />
+                <SignalDial verdict={data.technical.verdict} overallSentiment={news?.summary?.overall_sentiment ?? "Neutral"} />
+              </div>
+            </div>
+            <p className="text-xs text-ink-muted mt-2">
+              Statistical projection based on historical volatility &amp; trend — not a prediction of future prices or trading advice.
+            </p>
           </motion.section>
 
           <motion.section initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.15 }}>

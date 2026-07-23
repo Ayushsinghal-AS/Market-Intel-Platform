@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../../api";
 import { NAV_ITEMS } from "./Sidebar";
+import { useMarketHours } from "../../contexts/MarketHoursContext";
 
 export default function Footer() {
   const [apiOnline, setApiOnline] = useState(null);
+  const { isMarketOpen, realOpen, simulateOverride, setSimulateOverride } = useMarketHours();
 
   useEffect(() => {
     let cancelled = false;
@@ -31,6 +33,24 @@ export default function Footer() {
             <span className={`w-1.5 h-1.5 rounded-full ${apiOnline ? "bg-status-good" : apiOnline === false ? "bg-status-critical" : "bg-ink-muted"}`} />
             API {apiOnline === null ? "checking…" : apiOnline ? "Online" : "Offline"}
           </div>
+
+          <label className="flex items-center gap-2 mt-3 cursor-pointer w-fit">
+            <button
+              role="switch"
+              aria-checked={simulateOverride}
+              onClick={() => setSimulateOverride(!simulateOverride)}
+              className={`relative w-8 h-4 rounded-full transition-colors shrink-0 ${simulateOverride ? "bg-series-blue-light dark:bg-series-blue-dark" : "bg-black/15 dark:bg-white/15"}`}
+            >
+              <span
+                className={`absolute top-0.5 h-3 w-3 rounded-full bg-white transition-transform ${simulateOverride ? "translate-x-4" : "translate-x-0.5"}`}
+              />
+            </button>
+            <span>
+              Simulate Market Hours {!realOpen && isMarketOpen && "(active)"}
+            </span>
+          </label>
+          <p className="text-[11px] mt-1">Preview live-market behavior outside real trading hours.</p>
+
           <div className="flex items-center gap-3 mt-3">
             <span className="hover:underline cursor-pointer">GitHub</span>
             <span className="hover:underline cursor-pointer">Twitter</span>

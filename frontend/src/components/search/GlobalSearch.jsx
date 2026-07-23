@@ -44,7 +44,7 @@ export default function GlobalSearch({ className = "" }) {
   useEffect(() => {
     const found = fuzzyMatch(query);
     setMatches(found);
-    setActiveIndex(found.length ? 0 : -1);
+    setActiveIndex(found.length || query.trim() ? 0 : -1);
     if (!found.length) return;
 
     const timer = setTimeout(() => {
@@ -62,6 +62,16 @@ export default function GlobalSearch({ className = "" }) {
     return () => clearTimeout(timer);
   }, [query]);
 
+  // The dropdown above only ever covers the ~50 NIFTY50 names in
+  // niftyTickers.js -- anything outside that list (a smaller-cap stock, a
+  // slightly different name spelling) would otherwise show no suggestions
+  // and Enter would do nothing. This always-present trailing row hands the
+  // raw query straight to /stock/:ticker, which resolves it server-side via
+  // resolve_ticker (ticker guess, tickermap.csv name lookup, or a direct
+  // yfinance-valid symbol) -- the same fallback the /stock landing page uses.
+  const trimmedQuery = query.trim();
+  const items = trimmedQuery ? [...matches, { isGeneric: true, query: trimmedQuery }] : matches;
+
   useEffect(() => {
     const onClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) setIsOpen(false);
@@ -77,22 +87,25 @@ export default function GlobalSearch({ className = "" }) {
   };
 
   const onKeyDown = (e) => {
-    if (!isOpen || !matches.length) return;
+    if (!isOpen || !items.length) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((i) => (i + 1) % matches.length);
+      setActiveIndex((i) => (i + 1) % items.length);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIndex((i) => (i - 1 + matches.length) % matches.length);
+      setActiveIndex((i) => (i - 1 + items.length) % items.length);
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (activeIndex >= 0) goTo(matches[activeIndex].ticker);
+      if (activeIndex >= 0) {
+        const item = items[activeIndex];
+        goTo(item.isGeneric ? item.query : item.ticker);
+      }
     } else if (e.key === "Escape") {
       setIsOpen(false);
     }
   };
 
-  const showDropdown = isOpen && matches.length > 0;
+  const showDropdown = isOpen && items.length > 0;
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
@@ -113,7 +126,26 @@ export default function GlobalSearch({ className = "" }) {
 
       {showDropdown && (
         <div className="absolute mt-2 w-full min-w-[320px] glass-card overflow-hidden z-40 shadow-lg">
-          {matches.map((entry, i) => {
+          {items.map((item, i) => {
+            if (item.isGeneric) {
+              return (
+                <button
+                  key="__generic"
+                  onMouseEnter={() => setActiveIndex(i)}
+                  onClick={() => goTo(item.query)}
+                  className={`w-full flex items-center gap-2 px-3 py-2 text-left text-sm transition-colors border-t border-black/5 dark:border-white/10 ${
+                    activeIndex === i ? "bg-black/5 dark:bg-white/10" : ""
+                  }`}
+                >
+                  <Icon name="search" className="w-3.5 h-3.5 text-ink-muted shrink-0" />
+                  <span className="text-ink-muted">
+                    Search for <span className="font-medium text-ink-primary-light dark:text-ink-primary-dark">"{item.query}"</span>
+                  </span>
+                </button>
+              );
+            }
+
+            const entry = item;
             const ov = overviews[entry.ticker];
             const changePct =
               ov && ov.previous_close ? ((ov.price - ov.previous_close) / ov.previous_close) * 100 : null;

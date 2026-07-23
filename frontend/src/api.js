@@ -73,6 +73,7 @@ export const api = {
   stockOverview: (ticker) => request(`/stocks/${encodeURIComponent(ticker)}/overview`),
   stockNews: (ticker) => request(`/stocks/${encodeURIComponent(ticker)}/news`),
   stockPeers: (ticker) => request(`/stocks/${encodeURIComponent(ticker)}/peers`),
+  liveQuote: (ticker) => request(`/stocks/${encodeURIComponent(ticker)}/live`),
 
   etfList: () => request("/etf/list"),
   etfScan: () => request("/etf/scan"),
