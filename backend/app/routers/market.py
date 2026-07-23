@@ -1,13 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 
-from app.auth import get_current_user
 from app.data.nifty50 import NIFTY50
 from app.services import breadth, fear_greed, relative_strength, technical
 from app.services.market_data import get_history
 from app.services.nifty_scanner import get_multi_timeframe_dashboard
 from app.services.stock_explorer import get_overview
 
-router = APIRouter(prefix="/market", tags=["market"], dependencies=[Depends(get_current_user)])
+router = APIRouter(prefix="/market", tags=["market"])
 
 
 @router.get("/heatmap")

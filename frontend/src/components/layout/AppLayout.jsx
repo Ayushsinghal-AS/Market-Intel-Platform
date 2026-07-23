@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import Footer from "./Footer";
 
-export default function AppLayout({ username, onLogout }) {
+export default function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
@@ -13,7 +13,7 @@ export default function AppLayout({ username, onLogout }) {
     <div className="min-h-screen flex bg-page-light dark:bg-page-dark text-ink-primary-light dark:text-ink-primary-dark">
       <Sidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
       <div className="flex-1 min-w-0 flex flex-col">
-        <Header onToggleMobileSidebar={() => setMobileOpen((v) => !v)} username={username} onLogout={onLogout} />
+        <Header onToggleMobileSidebar={() => setMobileOpen((v) => !v)} />
         <main className="flex-1 min-w-0">
           <AnimatePresence mode="wait">
             <motion.div

@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 
-from app.auth import get_current_user
 from app.services.stock_explorer import resolve_ticker, get_overview
 from app.services.news import get_news_with_sentiment
 from app.services.peers import get_peer_comparison
 from app.services.market_data import get_live_quote
 
-router = APIRouter(prefix="/stocks", tags=["stocks"], dependencies=[Depends(get_current_user)])
+router = APIRouter(prefix="/stocks", tags=["stocks"])
 
 
 @router.get("/resolve")

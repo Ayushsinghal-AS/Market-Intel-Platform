@@ -15,10 +15,3 @@ CACHE_TTL_NEWS = 60 * 15
 CACHE_TTL_LIVE = 12              # single-ticker live-quote polling (StockDetail hero price)
 
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
-
-# Dev-only default -- always set a real JWT_SECRET via env in any deployed instance.
-JWT_SECRET = os.getenv("JWT_SECRET", "dev-only-insecure-secret-change-me")
-JWT_ALGORITHM = "HS256"
-JWT_EXPIRY_HOURS = int(os.getenv("JWT_EXPIRY_HOURS", "168"))  # 7 days
-
-DB_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(__file__), "..", "data_store", "app.db"))

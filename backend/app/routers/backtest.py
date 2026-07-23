@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from app.auth import get_current_user
 from app.schemas import BacktestRequest
 from app.services.backtest import run_ma_crossover
 
-router = APIRouter(prefix="/backtest", tags=["backtest"], dependencies=[Depends(get_current_user)])
+router = APIRouter(prefix="/backtest", tags=["backtest"])
 
 
 @router.post("/ma-crossover")

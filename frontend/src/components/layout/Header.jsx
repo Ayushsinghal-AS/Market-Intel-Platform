@@ -5,7 +5,7 @@ import LiveMarketBadge from "./LiveMarketBadge";
 import ThemeToggle from "./ThemeToggle";
 import Icon from "../icons/Icon";
 
-export default function Header({ onToggleMobileSidebar, username, onLogout }) {
+export default function Header({ onToggleMobileSidebar }) {
   const [bellOpen, setBellOpen] = useState(false);
 
   return (
@@ -42,16 +42,6 @@ export default function Header({ onToggleMobileSidebar, username, onLogout }) {
           </div>
 
           <ThemeToggle />
-
-          <div className="hidden sm:flex items-center gap-2 text-xs text-ink-muted pl-2 ml-1 border-l border-black/10 dark:border-white/10">
-            <span>{username}</span>
-            <button
-              onClick={onLogout}
-              className="px-2 py-1 rounded border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5"
-            >
-              Log out
-            </button>
-          </div>
         </div>
       </div>
     </header>

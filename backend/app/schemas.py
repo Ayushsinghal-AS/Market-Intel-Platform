@@ -26,8 +26,3 @@ class BacktestRequest(BaseModel):
     short_window: int = 50
     long_window: int = 200
     period: str = "5y"
-
-
-class AuthRequest(BaseModel):
-    username: str = Field(min_length=3, max_length=32)
-    password: str = Field(min_length=6, max_length=128)

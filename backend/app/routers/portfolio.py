@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from app.auth import get_current_user
 from app.schemas import PortfolioRequest, OverlapRequest
 from app.services import portfolio as portfolio_service
 from app.services import overlap as overlap_service
 
-router = APIRouter(prefix="/portfolio", tags=["portfolio"], dependencies=[Depends(get_current_user)])
+router = APIRouter(prefix="/portfolio", tags=["portfolio"])
 
 
 @router.post("/analyze")

@@ -14,10 +14,10 @@ import CagrCalculator from "../components/calculators/CagrCalculator";
 import OptionsPayoffVisualizer from "../components/calculators/OptionsPayoffVisualizer";
 import NotFound from "../pages/NotFound";
 
-export default function AppRoutes({ username, onLogout }) {
+export default function AppRoutes() {
   return (
     <Routes>
-      <Route element={<AppLayout username={username} onLogout={onLogout} />}>
+      <Route element={<AppLayout />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="stock" element={<StockSearchLanding />} />

@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from app.auth import get_current_user
 from app.services.news import get_news_with_sentiment
 
-router = APIRouter(prefix="/news", tags=["news"], dependencies=[Depends(get_current_user)])
+router = APIRouter(prefix="/news", tags=["news"])
 
 
 @router.get("/sentiment/{ticker}")

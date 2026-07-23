@@ -1,5 +1,3 @@
-import { getToken, clearSession } from "./auth";
-
 const BASE_URL = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8123";
 
 // Nifty/ETF scans hit yfinance for many tickers and can legitimately take a
@@ -9,12 +7,8 @@ const DEFAULT_TIMEOUT_MS = 20_000;
 const SLOW_TIMEOUT_MS = 45_000;
 const SLOW_PATHS = ["/etf/scan", "/market/nifty-multi-timeframe", "/market/breadth", "/market/relative-strength", "/market/sector/"];
 
-async function request(path, options = {}, auth = true) {
+async function request(path, options = {}) {
   const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
-  if (auth) {
-    const token = getToken();
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-  }
 
   const timeoutMs = SLOW_PATHS.some((p) => path.startsWith(p)) ? SLOW_TIMEOUT_MS : DEFAULT_TIMEOUT_MS;
   const controller = new AbortController();
@@ -32,10 +26,6 @@ async function request(path, options = {}, auth = true) {
     clearTimeout(timer);
   }
 
-  if (res.status === 401 && auth) {
-    clearSession();
-    window.dispatchEvent(new Event("auth:unauthorized"));
-  }
   if (!res.ok) {
     const body = await res.text();
     throw new Error(`${res.status} ${path}: ${body}`);
@@ -44,13 +34,7 @@ async function request(path, options = {}, auth = true) {
 }
 
 export const api = {
-  health: () => request("/health", {}, false),
-
-  register: (username, password) =>
-    request("/auth/register", { method: "POST", body: JSON.stringify({ username, password }) }, false),
-  login: (username, password) =>
-    request("/auth/login", { method: "POST", body: JSON.stringify({ username, password }) }, false),
-  guestLogin: () => request("/auth/guest", { method: "POST" }, false),
+  health: () => request("/health"),
 
   heatmap: () => request("/market/heatmap"),
   breadth: () => request("/market/breadth"),
