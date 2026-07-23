@@ -1,12 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
-  darkMode: "media",
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        surface: { light: "#fcfcfb", dark: "#1a1a19" },
-        page: { light: "#f9f9f7", dark: "#0d0d0d" },
+        surface: { light: "#fcfcfb", dark: "#111827" },
+        page: { light: "#f9f9f7", dark: "#0b1120" },
         ink: {
           primary: { light: "#0b0b0b", dark: "#ffffff" },
           secondary: { light: "#52514e", dark: "#c3c2b7" },
@@ -17,12 +17,15 @@ export default {
           green: { light: "#008300", dark: "#008300" },
         },
         status: {
-          good: "#0ca30c",
+          good: "#10B981",
           warning: "#fab219",
           serious: "#ec835a",
-          critical: "#d03b3b",
+          critical: "#EF4444",
         },
-        gridline: { light: "#e1e0d9", dark: "#2c2c2a" },
+        gridline: { light: "#e1e0d9", dark: "#1e293b" },
+        // RGB triplets (not hex) so glass utilities can apply them at partial
+        // opacity via bg-[rgba(var(--glass-rgb)/opacity)].
+        glass: { light: "255,255,255", dark: "17,24,39" },
       },
     },
   },

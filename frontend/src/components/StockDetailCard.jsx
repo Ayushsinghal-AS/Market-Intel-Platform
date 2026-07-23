@@ -27,7 +27,7 @@ export default function StockDetailCard({ stock }) {
         </div>
       </div>
 
-      <Sparkline data={stock.chart} color={changePct >= 0 ? "#0ca30c" : "#d03b3b"} />
+      <Sparkline data={stock.chart} color={changePct >= 0 ? "#10B981" : "#EF4444"} />
 
       <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs mt-2">
         <div className="text-ink-muted">Prev Close</div>

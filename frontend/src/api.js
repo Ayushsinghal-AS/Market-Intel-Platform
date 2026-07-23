@@ -44,6 +44,8 @@ async function request(path, options = {}, auth = true) {
 }
 
 export const api = {
+  health: () => request("/health", {}, false),
+
   register: (username, password) =>
     request("/auth/register", { method: "POST", body: JSON.stringify({ username, password }) }, false),
   login: (username, password) =>
@@ -56,6 +58,7 @@ export const api = {
   technical: (ticker) => request(`/market/technical/${ticker}`),
   sectorStocks: (sector) => request(`/market/sector/${encodeURIComponent(sector)}/stocks`),
   niftyMultiTimeframe: () => request("/market/nifty-multi-timeframe"),
+  fearGreed: () => request("/market/fear-greed"),
 
   newsSentiment: (ticker) => request(`/news/sentiment/${ticker}`),
 
@@ -69,6 +72,7 @@ export const api = {
   resolveTicker: (q) => request(`/stocks/resolve?q=${encodeURIComponent(q)}`),
   stockOverview: (ticker) => request(`/stocks/${encodeURIComponent(ticker)}/overview`),
   stockNews: (ticker) => request(`/stocks/${encodeURIComponent(ticker)}/news`),
+  stockPeers: (ticker) => request(`/stocks/${encodeURIComponent(ticker)}/peers`),
 
   etfList: () => request("/etf/list"),
   etfScan: () => request("/etf/scan"),

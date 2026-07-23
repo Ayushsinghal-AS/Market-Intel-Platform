@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import StatCard from "../components/StatCard";
+import { SkeletonStatGrid, SkeletonTableRows } from "../components/ui/Skeleton";
 
 const TF_ORDER = ["1m", "5m", "10m", "15m", "1h", "1d"];
 
@@ -31,7 +32,14 @@ export default function NiftyScanner() {
 
   useEffect(load, []);
 
-  if (loading) return <div className="p-6 text-ink-muted">Fetching multi-timeframe Nifty 50 signals…</div>;
+  if (loading) {
+    return (
+      <div className="p-6 space-y-8 max-w-6xl mx-auto">
+        <SkeletonStatGrid count={4} />
+        <SkeletonTableRows rows={6} cols={7} />
+      </div>
+    );
+  }
   if (error) return <div className="p-6 text-status-critical">Failed to load: {error}</div>;
 
   return (
@@ -53,7 +61,7 @@ export default function NiftyScanner() {
 
       <section>
         <h2 className="text-sm font-semibold text-ink-muted mb-3 uppercase tracking-wide">Timeframe Verdicts</h2>
-        <div className="overflow-x-auto rounded-lg border border-black/10 dark:border-white/10">
+        <div className="overflow-x-auto glass-card">
           <table className="w-full text-sm">
             <thead className="bg-black/5 dark:bg-white/5 text-ink-muted text-xs uppercase">
               <tr>

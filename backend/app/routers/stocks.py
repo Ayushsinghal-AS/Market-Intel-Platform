@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.auth import get_current_user
 from app.services.stock_explorer import resolve_ticker, get_overview
 from app.services.news import get_news_with_sentiment
+from app.services.peers import get_peer_comparison
 
 router = APIRouter(prefix="/stocks", tags=["stocks"], dependencies=[Depends(get_current_user)])
 
@@ -28,3 +29,9 @@ def overview(ticker: str):
 def news(ticker: str, limit: int = 8):
     resolved = resolve_ticker(ticker) or ticker
     return get_news_with_sentiment(resolved, limit=limit)
+
+
+@router.get("/{ticker}/peers")
+def peers(ticker: str):
+    resolved = resolve_ticker(ticker) or ticker
+    return get_peer_comparison(resolved)

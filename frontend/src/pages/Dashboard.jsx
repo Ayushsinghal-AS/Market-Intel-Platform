@@ -3,6 +3,8 @@ import { api } from "../api";
 import StatCard from "../components/StatCard";
 import Heatmap from "../components/Heatmap";
 import StockDetailCard from "../components/StockDetailCard";
+import FearGreedGauge from "../components/FearGreedGauge";
+import { SkeletonStatGrid, SkeletonTableRows } from "../components/ui/Skeleton";
 
 export default function Dashboard() {
   const [heatmap, setHeatmap] = useState(null);
@@ -39,13 +41,25 @@ export default function Dashboard() {
       .finally(() => setSectorLoading(false));
   };
 
-  if (loading) return <div className="p-6 text-ink-muted">Fetching live Nifty 50 data from Yahoo Finance…</div>;
+  if (loading) {
+    return (
+      <div className="p-6 space-y-8 max-w-6xl mx-auto">
+        <SkeletonStatGrid count={4} />
+        <SkeletonTableRows rows={4} cols={6} />
+        <SkeletonTableRows rows={6} cols={5} />
+      </div>
+    );
+  }
   if (error) return <div className="p-6 text-status-critical">Failed to load: {error}</div>;
 
   const regimeTone = breadth.market_regime === "Bullish" ? "good" : breadth.market_regime === "Bearish" ? "critical" : "neutral";
 
   return (
     <div className="p-6 space-y-8 max-w-6xl mx-auto">
+      <section>
+        <FearGreedGauge />
+      </section>
+
       <section>
         <h2 className="text-sm font-semibold text-ink-muted mb-3 uppercase tracking-wide">Market Breadth</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -87,7 +101,7 @@ export default function Dashboard() {
         <h2 className="text-sm font-semibold text-ink-muted mb-3 uppercase tracking-wide">
           Relative Strength vs Nifty 50 ({rs.window_days}-day)
         </h2>
-        <div className="overflow-x-auto rounded-lg border border-black/10 dark:border-white/10">
+        <div className="overflow-x-auto glass-card">
           <table className="w-full text-sm">
             <thead className="bg-black/5 dark:bg-white/5 text-ink-muted text-xs uppercase">
               <tr>

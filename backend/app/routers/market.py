@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.auth import get_current_user
 from app.data.nifty50 import NIFTY50
-from app.services import breadth, relative_strength, technical
+from app.services import breadth, fear_greed, relative_strength, technical
 from app.services.market_data import get_history
 from app.services.nifty_scanner import get_multi_timeframe_dashboard
 from app.services.stock_explorer import get_overview
@@ -41,6 +41,11 @@ def sector_stocks(sector: str):
 @router.get("/nifty-multi-timeframe")
 def nifty_multi_timeframe():
     return get_multi_timeframe_dashboard()
+
+
+@router.get("/fear-greed")
+def fear_greed_index():
+    return fear_greed.get_fear_greed_index()
 
 
 @router.get("/technical/{ticker}")

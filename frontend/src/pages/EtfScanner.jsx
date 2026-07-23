@@ -68,7 +68,7 @@ export default function EtfScanner() {
 
           <section>
             <h2 className="text-sm font-semibold text-ink-muted mb-3 uppercase tracking-wide">All Scanned ETFs</h2>
-            <div className="overflow-x-auto rounded-lg border border-black/10 dark:border-white/10">
+            <div className="overflow-x-auto glass-card">
               <table className="w-full text-sm">
                 <thead className="bg-black/5 dark:bg-white/5 text-ink-muted text-xs uppercase">
                   <tr>
