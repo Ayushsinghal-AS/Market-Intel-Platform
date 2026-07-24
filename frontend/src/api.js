@@ -61,4 +61,6 @@ export const api = {
 
   etfList: () => request("/etf/list"),
   etfScan: () => request("/etf/scan"),
+
+  fnoChain: (index, expiry) => request(`/fno/chain?index=${index}${expiry ? `&expiry=${expiry}` : ""}`),
 };

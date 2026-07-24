@@ -13,5 +13,6 @@ CACHE_TTL_INTRADAY = 60 * 5      # fast-moving: breadth, heatmap
 CACHE_TTL_DAILY = 60 * 30        # daily bars, technicals
 CACHE_TTL_NEWS = 60 * 15
 CACHE_TTL_LIVE = 12              # single-ticker live-quote polling (StockDetail hero price)
+CACHE_TTL_FNO_CHAIN = 15         # synthetic option chain recompute (spot itself is separately cached at CACHE_TTL_LIVE)
 
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")

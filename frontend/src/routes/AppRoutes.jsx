@@ -8,6 +8,7 @@ import StockSearchLanding from "../pages/StockSearchLanding";
 import EtfScanner from "../pages/EtfScanner";
 import NiftyScanner from "../pages/NiftyScanner";
 import Calculators from "../pages/Calculators";
+import FnoAnalytics from "../pages/FnoAnalytics";
 import SipCalculator from "../components/calculators/SipCalculator";
 import LumpsumCalculator from "../components/calculators/LumpsumCalculator";
 import CagrCalculator from "../components/calculators/CagrCalculator";
@@ -26,6 +27,7 @@ export default function AppRoutes() {
         <Route path="etf-scanner" element={<EtfScanner />} />
         <Route path="nifty-scanner" element={<NiftyScanner />} />
         <Route path="backtest" element={<Backtest />} />
+        <Route path="fno-analytics" element={<FnoAnalytics />} />
         <Route path="calculators" element={<Calculators />}>
           <Route index element={<Navigate to="sip" replace />} />
           <Route path="sip" element={<SipCalculator />} />

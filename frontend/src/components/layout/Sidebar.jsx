@@ -11,6 +11,7 @@ export const NAV_ITEMS = [
   { path: "/nifty-scanner", label: "Nifty Scanner", icon: "pulse" },
   { path: "/backtest", label: "Backtest", icon: "history" },
   { path: "/calculators", label: "Calculators", icon: "calculator" },
+  { path: "/fno-analytics", label: "FnO Analytics", icon: "grid" },
 ];
 
 const STORAGE_KEY = "mip_sidebar_collapsed";

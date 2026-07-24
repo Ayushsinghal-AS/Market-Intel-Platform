@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import CORS_ORIGINS
-from app.routers import market, portfolio, news, backtest, stocks, etf
+from app.routers import market, portfolio, news, backtest, stocks, etf, fno
 
 app = FastAPI(
     title="Market Intelligence Platform API",
@@ -25,6 +25,7 @@ app.include_router(news.router)
 app.include_router(backtest.router)
 app.include_router(stocks.router)
 app.include_router(etf.router)
+app.include_router(fno.router)
 
 
 @app.get("/health")
